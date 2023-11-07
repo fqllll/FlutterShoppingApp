@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:homework2_shoppingapp/component/myAlertDialog.dart';
+import 'package:shoppingapp/component/myAlertDialog.dart';
+import 'package:shoppingapp/component/myToast.dart';
 import '../../component/background1.dart';
 import '../../entity/user.dart';
-import '../../instance/user_list.dart';
+import '../../instance/userList.dart';
 
 class RegisterPage extends StatelessWidget {
   final TextEditingController _usernameController = TextEditingController();
@@ -29,14 +29,7 @@ class RegisterPage extends StatelessWidget {
         },
       );
     } else {
-      Fluttertoast.showToast(
-          msg: "账号或密码不能为空！",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Color.fromARGB(255, 237, 140, 134),
-          textColor: Colors.white,
-          fontSize: 16.0);
+      warningToast("账号或密码不能为空！", true);
     }
   }
 
@@ -74,16 +67,15 @@ class RegisterPage extends StatelessWidget {
                   ),
                   SizedBox(height: 20.0),
                   SizedBox(
-                  width: double.infinity,
-                  child:FloatingActionButton.extended(
-                      label: Text("注册"),
-                      icon:Icon(Icons.app_registration),
-                      backgroundColor: Colors.pinkAccent,
-                      onPressed: () {
-                        register(context);
-                      },
-                  )
-                ),
+                      width: double.infinity,
+                      child: FloatingActionButton.extended(
+                        label: Text("注册"),
+                        icon: Icon(Icons.app_registration),
+                        backgroundColor: Colors.pinkAccent,
+                        onPressed: () {
+                          register(context);
+                        },
+                      )),
                 ],
               ),
             )));

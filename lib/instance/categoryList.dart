@@ -1,6 +1,6 @@
 import '../entity/category.dart';
 
-List<Category> category_list = [
+List<Category> categoryList = [
   Category(id: 0, name: '全部', img: 'images/category/全部.png'),
   Category(id: 1, name: '电子产品', img: 'images/category/电子产品.png'),
   Category(id: 2, name: '日常用品', img: 'images/category/日常用品.png'),

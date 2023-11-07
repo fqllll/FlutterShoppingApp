@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:homework2_shoppingapp/component/background1.dart';
+import 'package:shoppingapp/component/background1.dart';
+import 'package:shoppingapp/component/myToast.dart';
+import 'package:shoppingapp/instance/cartItemList.dart';
 import '../../instance/login_state_instance.dart';
 import '../user/login.dart';
 
@@ -15,7 +17,7 @@ class _PersonPageState extends State<PersonPage> {
   @override
   Widget build(BuildContext context) {
     // 根据登录状态 判断显示的页面
-    return loginState.state == 0?LogoutPerson():LoginPerson();
+    return loginState.state == 0 ? LogoutPerson() : LoginPerson();
   }
 }
 
@@ -24,13 +26,12 @@ class LogoutPerson extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('FQ商城-个人主页')),
-      body: Center(
-        child: Center(
-          child: Text('您还未登录,请点击右下方按钮进行登录！'),
-        ),
-      )
-    );
+        appBar: AppBar(title: Text('FQ商城-个人主页')),
+        body: Center(
+          child: Center(
+            child: Text('您还未登录,请点击右下方按钮进行登录！'),
+          ),
+        ));
   }
 }
 
@@ -40,14 +41,8 @@ class LoginPerson extends StatelessWidget {
     // 设置未未登录状态
     loginState.user?.username = '游客';
     loginState.state = 0;
-    Fluttertoast.showToast(
-        msg: "退出登录！",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Color.fromARGB(255, 215, 214, 214),
-        textColor: Colors.white,
-        fontSize: 16.0);
+    cartItemList = [];
+    warningToast("退出登录！", true);
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (BuildContext context) {
       return LoginPage();
@@ -65,14 +60,20 @@ class LoginPerson extends StatelessWidget {
             ),
             Center(
               child: Column(children: [
-                SizedBox(height: 50.0,),
+                SizedBox(
+                  height: 50.0,
+                ),
                 CircleAvatar(
                   radius: 50,
                   backgroundImage: NetworkImage('${loginState.user?.avatar}'),
                 ),
-                SizedBox(height: 20.0,),
+                SizedBox(
+                  height: 20.0,
+                ),
                 Text('${loginState.user?.username}'),
-                SizedBox(height: 50.0,),
+                SizedBox(
+                  height: 50.0,
+                ),
                 ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:

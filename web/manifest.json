@@ -1,6 +1,6 @@
 {
-    "name": "homework2_shoppingapp",
-    "short_name": "homework2_shoppingapp",
+    "name": "shoppingapp",
+    "short_name": "shoppingapp",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,4 +1,6 @@
 class Product {
+  // 商品id
+  final int id;
   // 商品名
   final String name;
   // 商品价格
@@ -9,11 +11,11 @@ class Product {
   final String description;
   // 商品分类
   final int categoryId;
-  Product({
-    required this.name, 
-    required this.price, 
-    required this.imageUrl,
-    this.description = '',
-    this.categoryId = 0
-    });
+  Product(
+      {required this.id,
+      required this.name,
+      required this.price,
+      required this.imageUrl,
+      this.description = '',
+      this.categoryId = 0});
 }

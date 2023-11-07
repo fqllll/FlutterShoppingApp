@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:homework2_shoppingapp/entity/category.dart';
+import 'package:shoppingapp/component/myToast.dart';
+import 'package:shoppingapp/entity/cartItem.dart';
+import 'package:shoppingapp/entity/category.dart';
+import 'package:shoppingapp/instance/cartItemList.dart';
+import 'package:shoppingapp/instance/login_state_instance.dart';
 import '../../entity/product.dart';
-import '../../instance/category_list.dart';
-import '../../instance/product_list.dart';
+import '../../instance/categoryList.dart';
+import '../../instance/productList.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -55,7 +59,7 @@ class _HomePageState extends State<HomePage> {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  for (Category category in category_list)
+                  for (Category category in categoryList)
                     TextButton(
                       onPressed: () {
                         setState(() {
@@ -82,8 +86,7 @@ class _HomePageState extends State<HomePage> {
                 child: ProductGridView(
                     products: products,
                     searchText: searchText,
-                    categoryId: categoryId
-                )),
+                    categoryId: categoryId)),
           ],
         ),
       ),
@@ -123,14 +126,7 @@ class ProductGridView extends StatelessWidget {
                 .contains(searchText.toLowerCase()))
             .toList();
     if (filteredProducts.isEmpty) {
-      Fluttertoast.showToast(
-          msg: "没有商品~试试换一个搜索条件或分类~",
-          toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.redAccent,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      warningToast("没有商品~试试换一个搜索条件或分类~", false);
     }
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -159,6 +155,8 @@ class ProductGridView extends StatelessWidget {
               Text(
                 product.name,
                 textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.clip,
                 style: TextStyle(fontSize: 20.0),
               ),
               SizedBox(height: 5.0),
@@ -167,10 +165,60 @@ class ProductGridView extends StatelessWidget {
                 style: TextStyle(fontSize: 18.0, color: Colors.red),
               ),
               SizedBox(height: 5.0),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromARGB(255, 106, 171, 224)),
+                  onPressed: () {
+                    addToCart(product);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.shopping_cart),
+                      SizedBox(width: 8),
+                      Text('加入购物车'),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         );
       },
     );
+  }
+
+  // 将产品加入购物车
+  void addToCart(Product product) {
+    // 检测用户登录状态，若未登录，则不能加入购物车
+    if (loginState.state == 0) {
+      warningToast("未登录！不能添加商品到购物车！", true);
+      return;
+    }
+    // 检查购物车中是否已经存在该商品
+    bool isExisting = false;
+    for (CartItem item in cartItemList) {
+      if (item.product.id == product.id) {
+        // 商品已经存在，增加数量
+        item.num++;
+        isExisting = true;
+        break;
+      }
+    }
+    if (!isExisting) {
+      // 商品不存在，将商品添加到购物车
+      CartItem newItem = CartItem(product: product, num: 1);
+      cartItemList.add(newItem);
+    }
+    Fluttertoast.showToast(
+        msg: "添加商品${product.name}成功！",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Color.fromARGB(255, 158, 230, 142),
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }
